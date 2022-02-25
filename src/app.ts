@@ -1,8 +1,6 @@
+/* ------------------ INITIALISATION --------------------- */
 // Possibilité de creer des Alias pour des types qui sont complexes et donc eviter la repetition
 // Possibilité de creer des Generics pour avoir des sorte de param dans nos types <Type>
-
-import { isConstructorDeclaration } from "../node_modules/typescript/lib/typescript";
-
 type User = {firstname: string, lastname: string, age?: number}
 type DateString = string; // Pour une date au format "YYYY-MM-DD" par ex
 type Id = string | number // Pour une union
@@ -30,7 +28,7 @@ const user3 = {
 }
 type User2 = typeof user3; // Extrait un type à partir de user3 peut etre utile si on veut creer des types aà la voler generealement on fera le type dabord pour etre sur que l'objet correspond, la un changement ds la forme peut changer le type et apporter des soucis
 
-/* ---------------------------------------- */
+/* ------------------ FONCTIONS --------------------- */
 
 function consoleSize<Type extends {length: number}>(arg: Type): Type {
   console.log(arg.length);
@@ -63,7 +61,7 @@ function reverse<T>(arr: readonly T[]): T[]{
   return [...arr].reverse();
 }
 
-/* ---------------------------------------- */
+/* ------------------ CLASS --------------------- */
 
 
 class A {
@@ -114,6 +112,39 @@ class Subscriber {
     //methode alternative qui prend un eu plus de memoire
   }
 }
+/* ------------------ TYPE & INTERFACE --------------------- */
+
+//les deux sont similaire, quelque legere difference
+//Vaut mieux choisir les convention des le debut, "type" par defaut mais si besoin de definir un objet ou on va implementer ou pour une librairie "interface"
+
+type Point = {} // Pas ouvert donc non modifiable et peut servir d'alias pour les types primaire char, tab...
+
+interface Carre {} // Moin flexible, mais reste ouverte (peut etre plus tard modifié), on peut implementer une interface à une class par ex, se raproche des classe abstraite sans generer de chose au fichier de sortie
+
+/* ------------------ TUPLE & ENUM --------------------- */
+
+// type => "unknow" similaire à "any" mais ne peut pas etre utilisé avant d'etre precisé
+
+// On evite le "any" quand on connais pas le type a l'avance mais qu'on veut le preciser plus tard on utilise "unknow"
+function aaa(arg: unknown){
+  if(arg instanceof HTMLInputElement){
+    arg.value = "Hello"
+  }
+}
+
+const zz = { isPrivate: true, isPublic: false } as const // on peut plus modifier les valeurs
+const yy = [1,2,3] as const //c'est un tuple
+const ww: [string, number] = ['tomate',2] // plus precis ne change pas
+const xx: (string | number)[] = ['tomate',2] // diff on peut mettre [1,2] ou ["1",2] ou ["1","1"] alors que le premier l'ordre compte
+type ListItem = [string, number] // on peut aussi faire un alias
+const uu: ListItem = ['pomme',4]
+const vv: ListItem = ['raisin',3]
+
+function merge<R extends unknown[], U extends unknown[]>(a: R,b: U):[...R, ...U]{
+  return [...a,...b]
+}
+
+const ll = merge(uu,vv)
 /* ---------------------------------------- */
 
 const compteur = document.querySelector<HTMLButtonElement>('#compteur') // On precise element de type button car lui sait seulement qu'il attend un type Element 
