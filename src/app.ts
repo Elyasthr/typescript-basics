@@ -1,6 +1,8 @@
 // Possibilité de creer des Alias pour des types qui sont complexes et donc eviter la repetition
 // Possibilité de creer des Generics pour avoir des sorte de param dans nos types <Type>
 
+import { isConstructorDeclaration } from "../node_modules/typescript/lib/typescript";
+
 type User = {firstname: string, lastname: string, age?: number}
 type DateString = string; // Pour une date au format "YYYY-MM-DD" par ex
 type Id = string | number // Pour une union
@@ -56,6 +58,62 @@ function first<Type>(arg: Type[]): Type {
 const cc = first(["aa","ee","ff"]) // Il sait que c'est un type string
 const dd: Array<string | number> = ["bb","cc","gg",3] // Il sait que c'est un tableau de string et de number
 
+// Le tableau passer en param peut seulement etre lu et ne peut etre modifer on peut faire pareil pour le retour
+function reverse<T>(arr: readonly T[]): T[]{ 
+  return [...arr].reverse();
+}
+
+/* ---------------------------------------- */
+
+
+class A {
+  private a = 3 // peut etre acceder que dans la class avec this (impact que Ts pas Js)
+  protected b = 4 // pareil que private mais autorise enfant (impact que Ts pas Js)
+  public c = 5 // peut etre accepter par tout, valeur par default donc on peut ne pas l'ecrire 
+  #d = 6 // nouvelle fonctionnalité qui rend reelement la prop privé meme en js
+}
+
+class B extends A {
+  log(){
+    console.log(this.b)
+  }
+}
+
+class C {
+  constructor (
+    public a: number
+  ){
+
+  }
+}
+
+class Collection<T> {
+  constructor(private items: T[]) {
+  }
+
+  add (item: T): this{
+    this.items.push(item)
+    return this
+  }
+
+  first () : T | null{
+    return this.items[0] || null
+  }
+}
+const e = new Collection(["1",2]);
+const g = e.add(3)
+const f = e.first()
+
+
+class Subscriber {
+  on(this: HTMLInputElement, name: string, cb: Function){
+    // this prendra les valeur de HTMLInputElement
+  }
+
+  on2 = () => {
+    //methode alternative qui prend un eu plus de memoire
+  }
+}
 /* ---------------------------------------- */
 
 const compteur = document.querySelector<HTMLButtonElement>('#compteur') // On precise element de type button car lui sait seulement qu'il attend un type Element 
