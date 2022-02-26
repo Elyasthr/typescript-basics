@@ -12,7 +12,7 @@ const d: null = null;
 const arr: string[] = ["e",'ef'];
 const an: any = "Ce que l'ont veut"; //A eviter
 const user: {firstname: string, lastname: string, age?: number} = {firstname: "Touahria", lastname: "Elyas"};
-const user2: User = {firstname: "Touahria", lastname: "djamel"}
+const user2: User = {firstname: "Touahria", lastname: "Djamel"}
 const waitingUser: {[key: string]: string} = {}; // Signifie que l'ont attend un objet avec une chaine de char en clef et en valeur
 const date: Date = new Date();
 const cb: Function = (e: MouseEvent): void => {}; // Le type de retour de la f() est void car ne retourne rien
@@ -163,6 +163,48 @@ const enum STEPS2 {
   Panier,
   Paiement
 }
+
+/* ------------------ TYPES UTILITAIRE --------------------- */
+
+//Type conditionel
+class Poisson {
+
+}
+
+class Chat {
+
+}
+
+type AnimalOption = {nager: any} | {sauter: any};
+type AnimalFromOption<T> = T extends {nager: any} ? Poisson : Chat;
+
+function generator<T extends AnimalOption >(option: T): AnimalFromOption<T>
+{
+  if("nager" in option){
+    return new Poisson();
+  } else {
+    return new Chat();
+  }
+}
+
+const ff = generator({sauter: 'aze'})
+
+// Mapped Type pour modifier a la voler des types
+
+class FeatureFlags {
+  env = "hello"
+  darkMode() {return true}
+  privateMode() {return true}
+  nsfwMode() {return true}
+}
+
+type OptionFlag<T> = {
+  [key in keyof T]: T[key] extends()=> boolean ? boolean : never// + ou - readonly pour lecture seul ou +? pour optionnel
+}
+
+type Z = OptionFlag<FeatureFlags>
+
+//Ts met a disposition des utility types qui sont des fonctionner prefefiner pour modifier on peut en telecharger d'autre
 /* ---------------------------------------- */
 
 const compteur = document.querySelector<HTMLButtonElement>('#compteur') // On precise element de type button car lui sait seulement qu'il attend un type Element 
