@@ -122,7 +122,7 @@ type Point = {} // Pas ouvert donc non modifiable et peut servir d'alias pour le
 interface Carre {} // Moin flexible, mais reste ouverte (peut etre plus tard modifié), on peut implementer une interface à une class par ex, se raproche des classe abstraite sans generer de chose au fichier de sortie
 
 /* ------------------ TUPLE & ENUM --------------------- */
-
+// un "TUPLE" est un tableau de taille fixe
 // type => "unknow" similaire à "any" mais ne peut pas etre utilisé avant d'etre precisé
 
 // On evite le "any" quand on connais pas le type a l'avance mais qu'on veut le preciser plus tard on utilise "unknow"
@@ -145,6 +145,24 @@ function merge<R extends unknown[], U extends unknown[]>(a: R,b: U):[...R, ...U]
 }
 
 const ll = merge(uu,vv)
+
+//Enum sont plus cours a ecrire et donne un type directement, c'est une sorte d'objet
+
+enum STEPS {
+  Intro, // = "Intro", Pour debugage
+  Selection,
+  Panier,
+  Paiement
+}
+
+const step: STEPS = STEPS.Selection
+
+const enum STEPS2 {
+  Intro, // Prend direct la valeur
+  Selection,
+  Panier,
+  Paiement
+}
 /* ---------------------------------------- */
 
 const compteur = document.querySelector<HTMLButtonElement>('#compteur') // On precise element de type button car lui sait seulement qu'il attend un type Element 
